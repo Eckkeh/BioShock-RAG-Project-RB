@@ -16,21 +16,29 @@ def extract_cleaned_text(webpage_content):
     # Clean the text (e.g., remove extra whitespace, non-relevant parts)
     cleaned_text = ""
     for para in paragraphs:
-        cleaned_text += para.get_text(strip=True) + "\n"
+        cleaned_text += para.get_text(strip=True) + "\n\n"  # Ensure double newlines for chunk separation
     
     return cleaned_text
 
-# URL of the BioShock wiki page
-url = "https://bioshock.fandom.com/wiki/BioShock"
+# URLs of the BioShock wiki pages
+urls = [
+    "https://en.wikipedia.org/wiki/BioShock",  # BioShock main page
+    "https://en.wikipedia.org/wiki/Characters_of_the_BioShock_series"  # Characters page
+]
 
-# Fetch the webpage content
-webpage_content = fetch_webpage(url)
+# Initialize variable to hold all content
+all_cleaned_text = ""
 
-# Extract and clean the text
-cleaned_text = extract_cleaned_text(webpage_content)
+# Scrape both pages and extract content
+for url in urls:
+    print(f"Fetching content from: {url}")  # Debugging line
+    webpage_content = fetch_webpage(url)  # Fetch the content from the URL
+    cleaned_text = extract_cleaned_text(webpage_content)  # Extract and clean the text
+    all_cleaned_text += cleaned_text + "\n\n"  # Append the cleaned text from each page
 
-# Save the cleaned text to a file
+# Save the cleaned text to Selected_Document.txt
 with open("Selected_Document.txt", "w", encoding="utf-8") as file:
-    file.write(cleaned_text)
+    file.write(all_cleaned_text)
 
-print("Text successfully extracted and saved to Selected_Document.txt.")
+print("Text successfully extracted from both pages and saved to Selected_Document.txt.")
+print(f"Total extracted text length: {len(all_cleaned_text)}")  # Debugging line

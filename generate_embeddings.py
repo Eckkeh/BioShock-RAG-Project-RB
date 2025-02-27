@@ -7,9 +7,16 @@ def load_document(filename):
         content = file.read()
     return content
 
-# Split document into chunks using double newline (\n\n)
-def split_into_chunks(text):
-    return text.split("\n\n")
+# Split document into smaller chunks (~200 words each)
+def split_into_chunks(text, chunk_size=200):
+    words = text.split()  # Split into words
+    chunks = []
+    
+    for i in range(0, len(words), chunk_size):  # Process every 200 words
+        chunk = " ".join(words[i:i + chunk_size])  # Create a chunk of 200 words
+        chunks.append(chunk)
+
+    return chunks
 
 # Generate embeddings using SentenceTransformers
 def generate_embeddings(chunks):
@@ -28,7 +35,7 @@ def save_embeddings(embedding_dict, output_file="embeddings.json"):
 # Main execution
 if __name__ == "__main__":
     document_text = load_document("Selected_Document.txt")
-    text_chunks = split_into_chunks(document_text)
+    text_chunks = split_into_chunks(document_text)  # Now correctly chunked
     embeddings = generate_embeddings(text_chunks)
     
     save_embeddings(embeddings)
